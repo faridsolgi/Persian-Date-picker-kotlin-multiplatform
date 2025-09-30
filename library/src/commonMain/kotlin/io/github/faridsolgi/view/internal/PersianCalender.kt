@@ -1,6 +1,7 @@
 package io.github.faridsolgi.view.internal
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.fadeIn
@@ -13,25 +14,32 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.outlined.ChevronLeft
 import androidx.compose.material.icons.outlined.ChevronRight
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -85,6 +93,7 @@ internal fun PersianDatePickerCalender(
     NavigationMonthAndYearSelection(
         displayedDate,
         state,
+        colors,
         navigateToPreviousMonth = { state.navigateToPreviousMonth() },
         navigateToNextMonth = { state.navigateToNextMonth() },
     )
@@ -114,6 +123,7 @@ internal fun MonthGrid(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
         horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally)
+
     ) {
 
         // day weeks name
@@ -211,6 +221,7 @@ private fun MonthDayItem(
 internal fun NavigationMonthAndYearSelection(
     displayedDate: PersianDateTime,
     state: PersianDatePickerState,
+    colors: PersianDatePickerColors,
     navigateToPreviousMonth: () -> Unit,
     navigateToNextMonth: () -> Unit,
 ) {
@@ -218,7 +229,7 @@ internal fun NavigationMonthAndYearSelection(
         Modifier.fillMaxWidth().padding(start = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        YearSelector(displayedDate, state) {
+        YearPicker(displayedDate, state, colors) {
             state.initDisplayedDate = it
         }
         Spacer(Modifier.weight(1f))
@@ -244,61 +255,77 @@ internal fun NavigationMonthAndYearSelection(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun YearSelector(
+fun YearPicker(
     displayedDate: PersianDateTime,
     state: PersianDatePickerState,
+    colors: PersianDatePickerColors,
     onYearSelect: (PersianDateTime) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded }
-    ) {
-        Row(
-            modifier = Modifier
-                .clickable { expanded = !expanded }
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = displayedDate.format {
-                monthName()
-                char(' ')
-                year()
-            })
-            Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = "Dropdown"
-            )
-        }
-
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            // Display years in a grid
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3), // 3 columns
+    ProvideTextStyle(PersianDatePickerTokens.SelectionYearLabelTextFont) {
+        Column {
+            // The clickable button
+            if (expanded) {
+                Spacer(Modifier.padding(8.dp))
+            }
+            Row(
                 modifier = Modifier
-                    .padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    .clickable { expanded = !expanded },
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                items(state.yearRange.toList()) { item ->
-                    Text(
-                        text = item.toString(),
-                        modifier = Modifier
-                            .clickable {
-                                onYearSelect(displayedDate.copy(item))
-                                expanded = false
+                Text(
+                    text = displayedDate.format {
+                        monthName()
+                        char(' ')
+                        year()
+                    }
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                    contentDescription = "Dropdown"
+                )
+            }
+
+            // The custom dropdown
+            AnimatedVisibility(expanded) {
+
+                Card(
+                    modifier = Modifier
+                        .height(PersianDatePickerTokens.ContainerHeight - 16.dp),
+                    elevation = CardDefaults.cardElevation(0.dp),
+
+                    colors = CardDefaults.cardColors(containerColor = colors.containerColor)
+                ) {
+                    Box(modifier = Modifier.padding(8.dp)) {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(YearsInRow),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            items(state.yearRange.toList()) { year ->
+                                TextButton(
+                                    onClick = {
+                                        onYearSelect(displayedDate.copy(year))
+                                        expanded = false
+                                    },
+                                    colors = ButtonDefaults.textButtonColors(contentColor = colors.notSelectedDayColor)
+                                ) {
+                                    Text(year.toString())
+                                }
                             }
-                            .padding(8.dp)
-                    )
+                        }
+                    }
                 }
             }
         }
     }
 }
 
+
+internal val RecommendedSizeForAccessibility = 48.dp
+
+private const val MaxCalendarRows = 6
+private const val YearsInRow: Int = 3

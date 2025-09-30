@@ -1,6 +1,16 @@
 package io.github.faridsolgi.view
 
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +20,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -52,7 +63,7 @@ fun PersianDatePicker(
     showModeToggle: Boolean = true,
     colors: PersianDatePickerColors = PersianDatePickerDefaults.colors(),
 ) {
-    // DatePicker()
+    //DatePicker()
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Column(modifier) {
             PersianDatePickerHeadLine(
@@ -78,19 +89,26 @@ fun SwitchablePersianDatePickerContents(
     colors: PersianDatePickerColors,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier) {
-        when (state.displayMode) {
-            DisplayMode.Companion.Picker -> {
-                PersianDatePickerCalender(state, colors)
+
+        AnimatedContent(
+            targetState = state.displayMode ,
+            transitionSpec = {
+                slideInVertically(animationSpec = tween(10000)) { height -> height } + fadeIn() togetherWith
+                        slideOutVertically(animationSpec = tween(1000)) { height -> -height } + fadeOut()
+            },
+            label = "display mode transition"
+        ) { displayMode ->
+            Column(modifier) {
+            when (displayMode) {
+                DisplayMode.Companion.Picker -> {
+                    PersianDatePickerCalender(state, colors)
+                }
+
+                DisplayMode.Companion.Input -> {
+                    Text("test input")
+                }
             }
-
-            DisplayMode.Companion.Input -> {
-
-            }
-
-            else -> ""
         }
-
     }
 }
 
@@ -100,7 +118,7 @@ fun SwitchablePersianDatePickerContents(
 @Preview
 private fun PersianDatePickerPreview() {
     MaterialTheme {
-        val state = rememberPersianDatePickerState()
+        val state = rememberPersianDatePickerState(yearRange = 1400..1500)
 
         PersianDatePickerDialog(
             dismissButton = {
@@ -121,8 +139,6 @@ private fun PersianDatePickerPreview() {
                 state = state
             )
         }
-        Spacer(Modifier.padding(16.dp))
-        Text(state.selectedDate?.toDateString() ?: "")
     }
 }
 

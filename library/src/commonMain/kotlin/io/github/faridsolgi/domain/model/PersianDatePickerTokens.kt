@@ -17,4 +17,7 @@ internal object PersianDatePickerTokens {
         @Composable
         get() =  MaterialTheme.typography.bodyMedium
     val todayDateBorderWidth = 1.dp
+    val SelectionYearLabelTextFont
+        @Composable
+        get() = MaterialTheme.typography.bodyLarge
 }
