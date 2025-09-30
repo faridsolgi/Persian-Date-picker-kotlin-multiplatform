@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "io.github.faridsolgi"
-version = "1.0.0"
+version = "0.0.2"
 
 kotlin {
     jvm()
@@ -33,6 +33,7 @@ kotlin {
     wasmJs{
         browser()
         nodejs()
+        d8()
     }
 
     sourceSets {
@@ -92,9 +93,9 @@ tasks.named("publishKotlinMultiplatformPublicationToMavenLocal") {
 }
 signing {
     useInMemoryPgpKeys(
-        System.getenv("MAVEN_KEY_ID") as String?,
-        System.getenv("MAVEN_SECRET_KEY") as String?,
-        System.getenv("MAVEN_GPG_PASSWORD") as String?
+        System.getenv("MAVEN_KEY_ID"),
+        System.getenv("MAVEN_SECRET_KEY"),
+        System.getenv("MAVEN_GPG_PASSWORD")
     )
     sign(publishing.publications)
 }
@@ -105,7 +106,7 @@ tasks.withType<PublishToMavenLocal>().configureEach {
 mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
-    coordinates(group.toString(), "persianDatePicker", version.toString())
+    coordinates(group.toString(), "persian-date-picker", version.toString())
 
 
     pom {

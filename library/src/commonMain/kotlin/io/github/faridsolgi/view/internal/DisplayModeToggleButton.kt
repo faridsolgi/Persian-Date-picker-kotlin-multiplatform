@@ -1,8 +1,8 @@
-package io.github.faridsolgi.view
+package io.github.faridsolgi.view.internal
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -22,14 +22,14 @@ internal fun DisplayModeToggleButton(
     if (displayMode == DisplayMode.Companion.Picker) {
         IconButton(onClick = { onDisplayModeChange(DisplayMode.Companion.Input) }, modifier = modifier) {
             Icon(
-                imageVector = Icons.Filled.Edit,
+                imageVector = Icons.Outlined.Edit,
                 contentDescription = stringResource(Res.string.datePickerSwitchToInputMode)
             )
         }
     } else {
         IconButton(onClick = { onDisplayModeChange(DisplayMode.Companion.Picker) }, modifier = modifier) {
             Icon(
-                imageVector = Icons.Filled.DateRange,
+                imageVector = Icons.Outlined.DateRange,
                 contentDescription = stringResource(Res.string.datePickerSwitchToPickerMode)
             )
         }

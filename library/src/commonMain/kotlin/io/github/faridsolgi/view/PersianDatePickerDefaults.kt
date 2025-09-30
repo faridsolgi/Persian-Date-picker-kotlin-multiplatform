@@ -9,23 +9,20 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import io.github.faridsolgi.domain.SelectableDates
 import io.github.faridsolgi.domain.model.DisplayMode
 import io.github.faridsolgi.domain.model.PersianDatePickerColors
-import io.github.faridsolgi.domain.SelectableDates
 import io.github.faridsolgi.library.generated.resources.DateInputHeadline
 import io.github.faridsolgi.library.generated.resources.DatePickerHeadline
 import io.github.faridsolgi.library.generated.resources.Res
 import io.github.faridsolgi.library.generated.resources.dateInputTitle
 import io.github.faridsolgi.library.generated.resources.datePickerTitle
-import io.github.faridsolgi.library.generated.resources.vazirmatn_fd_bold
-import io.github.faridsolgi.library.generated.resources.vazirmatn_fd_regular
 import io.github.faridsolgi.persiandatetime.converter.format
 import io.github.faridsolgi.persiandatetime.domain.PersianDateTime
-import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
+
 val LocalPersianDatePickerTypography = staticCompositionLocalOf {
     Typography() // Fallback default
 }
@@ -119,41 +116,6 @@ object PersianDatePickerDefaults {
             maxLines = 1
         )
     }
-    @Composable
-  private  fun bodyFontFamily() = FontFamily(
-        Font(
-            resource = Res.font.vazirmatn_fd_regular,
-        )
-    )
-
-    @Composable
-   private fun displayFontFamily() = FontFamily(
-        Font(
-            resource = Res.font.vazirmatn_fd_bold
-        )
-    )
-    private val baseline = Typography()
-
-    @Composable
-    fun defaultTypography() = Typography(
-        displayLarge = baseline.displayLarge.copy(fontFamily = displayFontFamily()),
-        displayMedium = baseline.displayMedium.copy(fontFamily = displayFontFamily()),
-        displaySmall = baseline.displaySmall.copy(fontFamily = displayFontFamily()),
-        headlineLarge = baseline.headlineLarge.copy(fontFamily = displayFontFamily()),
-        headlineMedium = baseline.headlineMedium.copy(fontFamily = displayFontFamily()),
-        headlineSmall = baseline.headlineSmall.copy(fontFamily = displayFontFamily()),
-        titleLarge = baseline.titleLarge.copy(fontFamily = displayFontFamily()),
-        titleMedium = baseline.titleMedium.copy(fontFamily = displayFontFamily()),
-        titleSmall = baseline.titleSmall.copy(fontFamily = displayFontFamily()),
-        bodyLarge = baseline.bodyLarge.copy(fontFamily = bodyFontFamily()),
-        bodyMedium = baseline.bodyMedium.copy(fontFamily = bodyFontFamily()),
-        bodySmall = baseline.bodySmall.copy(fontFamily = bodyFontFamily()),
-        labelLarge = baseline.labelLarge.copy(fontFamily = bodyFontFamily()),
-        labelMedium = baseline.labelMedium.copy(fontFamily = bodyFontFamily()),
-        labelSmall = baseline.labelSmall.copy(fontFamily = bodyFontFamily()),
-    )
-
-
 
     val Shape: Shape
         @Composable

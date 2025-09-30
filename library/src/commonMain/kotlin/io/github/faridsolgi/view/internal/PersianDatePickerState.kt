@@ -1,4 +1,4 @@
-package io.github.faridsolgi.view
+package io.github.faridsolgi.view.internal
 
 
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,11 +12,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import io.github.faridsolgi.domain.model.DisplayMode
 import io.github.faridsolgi.domain.SelectableDates
-import io.github.faridsolgi.view.PersianDatePickerStateImpl.Companion.Saver
+import io.github.faridsolgi.view.internal.PersianDatePickerStateImpl.Companion.Saver
 import io.github.faridsolgi.persiandatetime.converter.nowPersianDate
 import io.github.faridsolgi.persiandatetime.converter.toLocalDate
 import io.github.faridsolgi.persiandatetime.converter.toPersianDateTime
 import io.github.faridsolgi.persiandatetime.domain.PersianDateTime
+import io.github.faridsolgi.view.PersianDatePickerDefaults
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlin.time.Clock
@@ -191,7 +192,7 @@ fun rememberPersianDatePickerState(
     initialDisplayMode: DisplayMode = DisplayMode.Companion.Picker,
     selectableDates: SelectableDates = PersianDatePickerDefaults.AllDatesSelectable,
 ): PersianDatePickerState {
-    return rememberSaveable(saver = Saver(selectableDates)) {
+    return rememberSaveable(saver = PersianDatePickerStateImpl.Companion.Saver(selectableDates)) {
         PersianDatePickerStateImpl(
             initialSelectedDate = initialSelectedDate,
             initDisplayedDate = initialDisplayedDate,

@@ -8,11 +8,11 @@ compose-multiplatform = "1.9.0"
 kotlinxDatetime = "0.7.1-0.6.x-compat"
 persianDateTime = "0.1.0"
 uiTooling = "1.9.2"
+
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 io-github-faridsolgi-persianDateTime = { module = "io.github.faridsolgi:persianDateTime", version.ref = "persianDateTime" }
-
 [plugins]
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
