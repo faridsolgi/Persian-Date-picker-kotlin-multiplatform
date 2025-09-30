@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="datePickerTitle">انتخاب تاریخ</string>
+    <string name="dateInputTitle">انتخاب تاریخ</string>
+    <string name="DatePickerHeadline">انتخاب تاریخ</string>
+    <string name="DateInputHeadline">وارد کردن تاریخ</string>
+    <string name="datePickerSwitchToInputMode">Switch to input mode</string>
+    <string name="datePickerSwitchToPickerMode">Switch to picker mode</string>
+</resources>
