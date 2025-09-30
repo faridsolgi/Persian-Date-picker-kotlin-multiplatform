@@ -1,5 +1,6 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
+import org.gradle.kotlin.dsl.invoke
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -10,6 +11,8 @@ plugins {
     alias(libs.plugins.vanniktech.mavenPublish)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    id("org.jetbrains.dokka") version "2.0.0"
+    signing
 }
 
 group = "io.github.faridsolgi"
@@ -45,7 +48,6 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.io.github.faridsolgi.persianDateTime)
                 implementation(compose.materialIconsExtended)
-
             }
         }
         val commonTest by getting {
@@ -67,12 +69,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
-tasks.withType<ProcessResources> {
-    from("src/commonMain/resources") {
-        include("font/vazirmatn-fd-bold.ttf")
-        include("font/vazirmatn-fd-regular.ttf")
-    }
-}
 dependencies {
     debugImplementation(compose.uiTooling)
 }
@@ -80,36 +76,60 @@ compose.resources {
     publicResClass = false
     generateResClass = auto
 }
+// javadoc jar با dokka
+tasks.register<Jar>("javadocJar") {
+    dependsOn(tasks.dokkaHtml)
+    archiveClassifier.set("javadoc")
+    from(tasks.dokkaHtml.flatMap { it.outputDirectory })
+}
+
+tasks.named("publishKotlinMultiplatformPublicationToMavenLocal") {
+    dependsOn("signKotlinMultiplatformPublication")
+    dependsOn("signJvmPublication")
+    dependsOn("signWasmJsPublication")
+    dependsOn("signAndroidReleasePublication")
+
+}
+signing {
+    useInMemoryPgpKeys(
+        System.getenv("MAVEN_KEY_ID") as String?,
+        System.getenv("MAVEN_SECRET_KEY") as String?,
+        System.getenv("MAVEN_GPG_PASSWORD") as String?
+    )
+    sign(publishing.publications)
+}
+tasks.withType<PublishToMavenLocal>().configureEach {
+    dependsOn(tasks.withType<Sign>())
+}
+// مطمئن شو هر publication سورس + javadoc داره
 mavenPublishing {
     publishToMavenCentral()
-
     signAllPublications()
+    coordinates(group.toString(), "persianDatePicker", version.toString())
 
-    coordinates(group.toString(), "persian-date-picker", version.toString())
 
     pom {
-        name = "My library"
-        description = "A library."
-        inceptionYear = "2024"
-        url = "https://github.com/kotlin/multiplatform-library-template/"
+        name = "Persian Date Picker Kotlin Multiplatform"
+        description = "A Kotlin Multiplatform library providing a Persian (Jalali) Date Picker."
+        inceptionYear = "2025"
+        url = "https://github.com/faridsolgi/Persian-Date-picker-kotlin-multiplatform"
         licenses {
             license {
-                name = "XXX"
-                url = "YYY"
-                distribution = "ZZZ"
+                name.set("MIT License")
+                url.set("https://opensource.org/licenses/MIT")
             }
         }
         developers {
             developer {
-                id = "XXX"
-                name = "YYY"
-                url = "ZZZ"
+                id.set("github")
+                name.set("Farid Solgi")
+                email.set("solgifarid@gmail.com")
             }
         }
         scm {
-            url = "XXX"
-            connection = "YYY"
-            developerConnection = "ZZZ"
+            connection.set("scm:git:git://github.io/github/Persian-Date-picker-kotlin-multiplatform.git")
+            developerConnection.set("scm:git:ssh://github.io:github/Persian-Date-picker-kotlin-multiplatform.git")
+            url.set("https://github.com/faridsolgi/Persian-Date-picker-kotlin-multiplatform")
         }
     }
 }
