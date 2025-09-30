@@ -1,12 +1,11 @@
-package io.github.faridsolgi
+package io.github.faridsolgi.domain.model
 
 import androidx.compose.material3.MaterialTheme
-
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
-internal object PersianDatePickerModalTokens {
+internal object PersianDatePickerTokens {
     val ContainerHeight = 568.0.dp
     val ContainerWidth = 360.0.dp
     val DateContainerHeight = 40.0.dp

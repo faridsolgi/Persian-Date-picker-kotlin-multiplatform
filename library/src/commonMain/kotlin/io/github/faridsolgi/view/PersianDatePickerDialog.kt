@@ -1,4 +1,4 @@
-package io.github.faridsolgi
+package io.github.faridsolgi.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import io.github.faridsolgi.domain.model.PersianDatePickerColors
+import io.github.faridsolgi.domain.model.PersianDatePickerTokens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,8 +50,8 @@ fun PersianDatePickerDialog(
         ) {
             Surface(
                 modifier =
-                    Modifier.requiredWidth(PersianDatePickerModalTokens.ContainerWidth)
-                        .heightIn(max = PersianDatePickerModalTokens.ContainerHeight),
+                    Modifier.Companion.requiredWidth(PersianDatePickerTokens.ContainerWidth)
+                        .heightIn(max = PersianDatePickerTokens.ContainerHeight),
                 shape = shape,
                 color = colors.containerColor,
                 tonalElevation = tonalElevation,

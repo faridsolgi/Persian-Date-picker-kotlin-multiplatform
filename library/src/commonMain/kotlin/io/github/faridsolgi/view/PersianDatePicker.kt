@@ -1,4 +1,4 @@
-package io.github.faridsolgi
+package io.github.faridsolgi.view
 
 
 import androidx.compose.animation.animateColorAsState
@@ -42,6 +42,9 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import io.github.faridsolgi.domain.model.DisplayMode
+import io.github.faridsolgi.domain.model.PersianDatePickerColors
+import io.github.faridsolgi.domain.model.PersianDatePickerTokens
 import io.github.faridsolgi.persiandatetime.converter.format
 import io.github.faridsolgi.persiandatetime.converter.monthLength
 import io.github.faridsolgi.persiandatetime.converter.nowPersianDate
@@ -103,11 +106,11 @@ fun SwitchablePersianDatePickerContents(
 ) {
     Column(modifier) {
         when (state.displayMode) {
-            DisplayMode.Picker -> {
+            DisplayMode.Companion.Picker -> {
                 PersianDatePickerCalender(state, colors)
             }
 
-            DisplayMode.Input -> {
+            DisplayMode.Companion.Input -> {
 
             }
 
@@ -189,7 +192,7 @@ fun PersianDatePickerCalender(
             Box(
                 Modifier.aspectRatio(1f).background(backgroundColor, shape = CircleShape)
                     .border(
-                        width = PersianDatePickerModalTokens.todayDateBorderWidth,
+                        width = PersianDatePickerTokens.todayDateBorderWidth,
                         borderColor,
                         CircleShape
                     ),
@@ -319,12 +322,12 @@ internal fun PersianDatePickerHeadLine(
 ) {
     Column(
         modifier = Modifier
-            .sizeIn(minWidth = PersianDatePickerModalTokens.ContainerWidth)
+            .sizeIn(minWidth = PersianDatePickerTokens.ContainerWidth)
             .background(colors.containerColor)
     ) {
         ProvideContentColorTextStyle(
             colors.titleColor,
-            PersianDatePickerModalTokens.titleTextStyle
+            PersianDatePickerTokens.titleTextStyle
         ) {
             title?.invoke()
         }
@@ -336,7 +339,7 @@ internal fun PersianDatePickerHeadLine(
         ) {
             ProvideContentColorTextStyle(
                 colors.headerColor,
-                PersianDatePickerModalTokens.HeadlineTextStyle
+                PersianDatePickerTokens.HeadlineTextStyle
             ) {
                 headline?.invoke()
             }

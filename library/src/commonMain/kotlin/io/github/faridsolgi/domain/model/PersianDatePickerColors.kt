@@ -1,4 +1,4 @@
-package io.github.faridsolgi
+package io.github.faridsolgi.domain.model
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
@@ -39,4 +39,3 @@ class PersianDatePickerColors(
         todayColor = todayColor.takeOrElse { this.todayColor }
         )
 }
-

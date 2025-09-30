@@ -1,4 +1,4 @@
-package io.github.faridsolgi
+package io.github.faridsolgi.view
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -9,9 +9,11 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import io.github.faridsolgi.domain.model.DisplayMode
+import io.github.faridsolgi.domain.model.PersianDatePickerColors
+import io.github.faridsolgi.domain.SelectableDates
 import io.github.faridsolgi.library.generated.resources.DateInputHeadline
 import io.github.faridsolgi.library.generated.resources.DatePickerHeadline
 import io.github.faridsolgi.library.generated.resources.Res
@@ -77,13 +79,13 @@ object PersianDatePickerDefaults {
     @Composable
     fun DatePickerTitle(displayMode: DisplayMode, modifier: Modifier = Modifier) {
         when (displayMode) {
-            DisplayMode.Picker ->
+            DisplayMode.Companion.Picker ->
                 Text(
                     text = stringResource(Res.string.datePickerTitle),
                     modifier = modifier
                 )
 
-            DisplayMode.Input ->
+            DisplayMode.Companion.Input ->
                 Text(text = stringResource(Res.string.dateInputTitle), modifier = modifier)
         }
     }
@@ -105,8 +107,8 @@ object PersianDatePickerDefaults {
                 year()
             }
                 ?: when (displayMode) {
-                    DisplayMode.Picker -> stringResource(Res.string.DatePickerHeadline)
-                    DisplayMode.Input -> stringResource(Res.string.DateInputHeadline)
+                    DisplayMode.Companion.Picker -> stringResource(Res.string.DatePickerHeadline)
+                    DisplayMode.Companion.Input -> stringResource(Res.string.DateInputHeadline)
                     else -> ""
                 }
 

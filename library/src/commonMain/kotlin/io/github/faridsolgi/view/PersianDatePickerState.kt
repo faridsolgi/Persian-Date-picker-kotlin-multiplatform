@@ -1,4 +1,4 @@
-package io.github.faridsolgi
+package io.github.faridsolgi.view
 
 
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -10,7 +10,9 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import io.github.faridsolgi.PersianDatePickerStateImpl.Companion.Saver
+import io.github.faridsolgi.domain.model.DisplayMode
+import io.github.faridsolgi.domain.SelectableDates
+import io.github.faridsolgi.view.PersianDatePickerStateImpl.Companion.Saver
 import io.github.faridsolgi.persiandatetime.converter.nowPersianDate
 import io.github.faridsolgi.persiandatetime.converter.toLocalDate
 import io.github.faridsolgi.persiandatetime.converter.toPersianDateTime
@@ -62,7 +64,7 @@ private class PersianDatePickerStateImpl(
     @Suppress("AutoBoxing") initialSelectedDate: PersianDateTime? = null,
     @Suppress("AutoBoxing") initDisplayedDate: PersianDateTime? = initialSelectedDate,
     yearRange: IntRange = PersianDatePickerDefaults.YearRange,
-    initialDisplayMode: DisplayMode = DisplayMode.Picker,
+    initialDisplayMode: DisplayMode = DisplayMode.Companion.Picker,
     selectableDates: SelectableDates = PersianDatePickerDefaults.AllDatesSelectable,
 ) : BasePersianDatePickerStateImpl(initDisplayedDate, yearRange, selectableDates),
     PersianDatePickerState {
@@ -186,7 +188,7 @@ fun rememberPersianDatePickerState(
     @Suppress("AutoBoxing") initialSelectedDate: PersianDateTime? = null,
     @Suppress("AutoBoxing") initialDisplayedDate: PersianDateTime? = initialSelectedDate,
     yearRange: IntRange = PersianDatePickerDefaults.YearRange,
-    initialDisplayMode: DisplayMode = DisplayMode.Picker,
+    initialDisplayMode: DisplayMode = DisplayMode.Companion.Picker,
     selectableDates: SelectableDates = PersianDatePickerDefaults.AllDatesSelectable,
 ): PersianDatePickerState {
     return rememberSaveable(saver = Saver(selectableDates)) {

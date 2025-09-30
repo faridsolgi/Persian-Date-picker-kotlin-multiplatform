@@ -1,4 +1,4 @@
-package io.github.faridsolgi
+package io.github.faridsolgi.domain.model
 
 import androidx.compose.runtime.Immutable
 import kotlin.jvm.JvmInline
