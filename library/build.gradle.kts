@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "io.github.faridsolgi"
-version = "0.0.10"
+version = "0.0.12-beta1"
 
 kotlin {
     jvm()

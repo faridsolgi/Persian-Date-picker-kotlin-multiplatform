@@ -3,6 +3,7 @@ package io.github.faridsolgi.domain.model
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
+import io.github.faridsolgi.persiandatetime.domain.PersianWeekday
 
 @Immutable
 class PersianDatePickerColors(
@@ -10,6 +11,7 @@ class PersianDatePickerColors(
     val selectedDayColor: Color,
     val onSelectedDayColor: Color,
     val notSelectedDayColor: Color,
+    val weekdaysColor : Color,
     val todayColor: Color,
     val titleColor: Color,
     val headerColor: Color,
@@ -26,9 +28,10 @@ class PersianDatePickerColors(
         selectedDayColor: Color = this.selectedDayColor,
         onSelectedDayColor: Color = this.onSelectedDayColor,
         notSelectedDayColor: Color = this.notSelectedDayColor,
+        weekdaysColor: Color = this.weekdaysColor
         ) = PersianDatePickerColors(
         containerColor = containerColor.takeOrElse { this.containerColor },
-
+        weekdaysColor = weekdaysColor.takeOrElse { this.weekdaysColor } ,
         titleColor = titleColor.takeOrElse { this.titleColor },
         headerColor = headerColor.takeOrElse { this.headerColor },
         confirmButtonColor = confirmButtonColor.takeOrElse { this.confirmButtonColor },

@@ -4,6 +4,13 @@
     <string name="dateInputTitle">انتخاب تاریخ</string>
     <string name="DatePickerHeadline">انتخاب تاریخ</string>
     <string name="DateInputHeadline">وارد کردن تاریخ</string>
+    <string name="date">تاریخ</string>
+    <string name="dateHint">سال/ماه/روز</string>
     <string name="datePickerSwitchToInputMode">Switch to input mode</string>
     <string name="datePickerSwitchToPickerMode">Switch to picker mode</string>
+    <string name="error_pattern_not_valid">
+    تاریخ باید به صورت سال ۴ رقمی، سپس ماه ۲ رقمی و سپس روز ۲ رقمی وارد شود.
+    مثال: ۱۴۰۴/۱۲/۳۰
+</string>
+    <string name="error_year_not_valid_range">سال باید بین %1$d تا %2$d باشد.</string>
 </resources>

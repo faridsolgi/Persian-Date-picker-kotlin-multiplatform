@@ -2,14 +2,11 @@ package io.github.faridsolgi.view
 
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,27 +18,53 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerFormatter
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import io.github.faridsolgi.domain.model.DisplayMode
 import io.github.faridsolgi.domain.model.PersianDatePickerColors
 import io.github.faridsolgi.domain.model.PersianDatePickerTokens
+import io.github.faridsolgi.library.generated.resources.Res
+import io.github.faridsolgi.library.generated.resources.date
+import io.github.faridsolgi.library.generated.resources.dateHint
+import io.github.faridsolgi.library.generated.resources.error_pattern_not_valid
+import io.github.faridsolgi.library.generated.resources.error_year_not_valid_range
+import io.github.faridsolgi.persiandatetime.converter.format
 import io.github.faridsolgi.persiandatetime.converter.toDateString
+import io.github.faridsolgi.persiandatetime.domain.PersianDateTime
+import io.github.faridsolgi.util.DateVisualTransformation
 import io.github.faridsolgi.view.internal.DisplayModeToggleButton
-import io.github.faridsolgi.view.internal.PersianDatePickerCalender
+import io.github.faridsolgi.view.internal.PersianDatePickerCalendar
 import io.github.faridsolgi.view.internal.ProvideContentColorTextStyle
+import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PersianDatePicker(
     state: PersianDatePickerState,
@@ -63,7 +86,6 @@ fun PersianDatePicker(
     showModeToggle: Boolean = true,
     colors: PersianDatePickerColors = PersianDatePickerDefaults.colors(),
 ) {
-    //DatePicker()
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Column(modifier) {
             PersianDatePickerHeadLine(
@@ -93,25 +115,88 @@ fun SwitchablePersianDatePickerContents(
         AnimatedContent(
             targetState = state.displayMode ,
             transitionSpec = {
-                slideInVertically(animationSpec = tween(10000)) { height -> height } + fadeIn() togetherWith
-                        slideOutVertically(animationSpec = tween(1000)) { height -> -height } + fadeOut()
+                slideInHorizontally(animationSpec = tween(500)) { height -> height } + fadeIn() togetherWith slideOutHorizontally(
+                    animationSpec = tween(500)
+                ) { height -> -height } + fadeOut()
             },
             label = "display mode transition"
         ) { displayMode ->
             Column(modifier) {
             when (displayMode) {
                 DisplayMode.Companion.Picker -> {
-                    PersianDatePickerCalender(state, colors)
+                    PersianDatePickerCalendar(state, colors)
                 }
 
                 DisplayMode.Companion.Input -> {
-                    Text("test input")
+                    PersianDateEnterSection(state, colors)
                 }
             }
         }
     }
 }
 
+@Composable
+internal fun PersianDateEnterSection(
+    state: PersianDatePickerState,
+    colors: PersianDatePickerColors,
+) {
+    var enteredDate by remember { mutableStateOf(state.selectedDate?.format { year();month();day(); }?:"") }
+    var isError by remember { mutableStateOf(false) }
+    var errorText by remember { mutableStateOf("") }
+    val errorPatternNotValid = stringResource(Res.string.error_pattern_not_valid)
+    val errorYearNotValidRange = stringResource(Res.string.error_year_not_valid_range,state.yearRange.first,state.yearRange.last)
+    LaunchedEffect(enteredDate) {
+        if (enteredDate.length == 8) {
+            val year = enteredDate.substring(0, 4).toIntOrNull()
+            val month = enteredDate.substring(4, 6).toIntOrNull()
+            val day = enteredDate.substring(6, 8).toIntOrNull()
+            if (year == null || year !in 1300..1500) {
+                    isError = true
+                    errorText = errorYearNotValidRange
+                state.selectedDate =null
+                return@LaunchedEffect
+            }
+            try {
+               val validDate = PersianDateTime(year=year,month=month!!,day=day!!)
+                state.selectedDate = validDate
+            }catch (e: IllegalArgumentException){
+                isError = true
+                errorText = e.message.toString()
+                state.selectedDate =null
+            }catch (e: Exception){
+                isError = true
+                errorText = errorPatternNotValid
+                state.selectedDate =null
+            }
+        } else {
+            isError = false
+            errorText = ""
+            state.selectedDate =null
+        }
+    }
+
+    OutlinedTextField(
+        modifier = Modifier.fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .padding(top = 16.dp),
+        value = enteredDate,
+        onValueChange = { newValue ->
+            // Keep only digits
+            val digits = newValue.filter { it.isDigit() }
+            enteredDate = digits.take(10)
+        },
+        isError = isError,
+        supportingText = {
+            Text(errorText,
+                style = LocalTextStyle.current.copy(textAlign = TextAlign.Start)
+            )
+        },
+        label = { Text(stringResource(Res.string.date)) },
+        placeholder = { Text(stringResource(Res.string.dateHint)) },
+        singleLine = true,
+        visualTransformation = DateVisualTransformation(),
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

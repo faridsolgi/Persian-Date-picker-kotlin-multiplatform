@@ -44,6 +44,7 @@ object PersianDatePickerDefaults {
         onSelectedDayColor: Color = Color.Unspecified,
         notSelectedDayColor: Color = Color.Unspecified,
         todayColor: Color = Color.Unspecified,
+        weekdaysColor: Color =Color.Unspecified
 
     ): PersianDatePickerColors = MaterialTheme.colorScheme.DefaultPersianDatePickerColors.copy(
         containerColor = containerColor,
@@ -53,7 +54,8 @@ object PersianDatePickerDefaults {
         selectedDayColor = selectedDayColor,
         onSelectedDayColor = onSelectedDayColor,
         notSelectedDayColor = notSelectedDayColor,
-        todayColor = todayColor
+        todayColor = todayColor,
+        weekdaysColor = weekdaysColor
     )
 
 
@@ -69,7 +71,8 @@ object PersianDatePickerDefaults {
                 selectedDayColor = this.primary,
                 onSelectedDayColor = this.onPrimary,
                 notSelectedDayColor = this.onSurface,
-                todayColor = this.primary
+                todayColor = this.primary,
+                weekdaysColor = this.onSurface
             )
         }
 
