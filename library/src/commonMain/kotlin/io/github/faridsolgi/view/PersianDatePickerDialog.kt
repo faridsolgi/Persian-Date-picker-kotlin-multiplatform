@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
@@ -74,10 +75,8 @@ fun PersianDatePickerDialog(
                             LocalLayoutDirection provides LayoutDirection.Rtl
                         ) {
                             Row(
-                                modifier = Modifier.padding(horizontal = DialogButtonsCrossAxisSpacing),
-                                horizontalArrangement = Arrangement.spacedBy(
-                                    DialogButtonsMainAxisSpacing
-                                ),
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = DialogButtonsCrossAxisSpacing),
+                                horizontalArrangement = Arrangement.End,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 dismissButton?.invoke()
