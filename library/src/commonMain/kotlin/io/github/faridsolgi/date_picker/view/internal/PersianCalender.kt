@@ -1,4 +1,4 @@
-package io.github.faridsolgi.view.internal
+package io.github.faridsolgi.date_picker.view.internal
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -56,17 +56,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.faridsolgi.domain.model.PersianDatePickerColors
 import io.github.faridsolgi.domain.model.PersianDatePickerTokens
-import io.github.faridsolgi.persiandatetime.converter.format
-import io.github.faridsolgi.persiandatetime.converter.monthLength
-import io.github.faridsolgi.persiandatetime.converter.nowPersianDate
-import io.github.faridsolgi.persiandatetime.converter.persianDayOfWeek
 import io.github.faridsolgi.persiandatetime.domain.PersianDateTime
 import io.github.faridsolgi.persiandatetime.domain.PersianWeekday
+import io.github.faridsolgi.persiandatetime.extensions.format
+import io.github.faridsolgi.persiandatetime.extensions.monthLength
+import io.github.faridsolgi.persiandatetime.extensions.nowPersianDate
+import io.github.faridsolgi.persiandatetime.extensions.persianDayOfWeek
+import io.github.faridsolgi.share.internal.ProvideContentColorTextStyle
 import io.github.faridsolgi.util.canNavigateToNextMonth
 import io.github.faridsolgi.util.canNavigateToPreviousMonth
 import io.github.faridsolgi.util.navigateToNextMonth
 import io.github.faridsolgi.util.navigateToPreviousMonth
-import io.github.faridsolgi.view.PersianDatePickerState
+import io.github.faridsolgi.date_picker.view.PersianDatePickerState
 import kotlinx.datetime.TimeZone
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime

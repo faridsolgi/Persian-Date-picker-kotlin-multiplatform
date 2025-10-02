@@ -2,8 +2,10 @@
 <resources>
     <string name="datePickerTitle">انتخاب تاریخ</string>
     <string name="dateInputTitle">انتخاب تاریخ</string>
-    <string name="DatePickerHeadline">انتخاب تاریخ</string>
-    <string name="DateInputHeadline">وارد کردن تاریخ</string>
+    <string name="datePickerHeadline">انتخاب تاریخ</string>
+    <string name="dateInputHeadline">وارد کردن تاریخ</string>
+    <string name="dateRangeStartHeadline">تاریخ شروع</string>
+    <string name="dateRangeEndHeadline">تاریخ پایان</string>
     <string name="date">تاریخ</string>
     <string name="dateHint">سال/ماه/روز</string>
     <string name="datePickerSwitchToInputMode">Switch to input mode</string>

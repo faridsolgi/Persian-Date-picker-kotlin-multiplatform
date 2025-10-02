@@ -1,7 +1,7 @@
 package io.github.faridsolgi.util
 
 import io.github.faridsolgi.persiandatetime.domain.PersianDateTime
-import io.github.faridsolgi.view.PersianDatePickerState
+import io.github.faridsolgi.date_picker.view.PersianDatePickerState
 
 
 internal fun PersianDatePickerState.navigateToPreviousMonth() {

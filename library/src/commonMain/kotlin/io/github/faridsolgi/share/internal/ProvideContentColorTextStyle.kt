@@ -1,4 +1,4 @@
-package io.github.faridsolgi.view.internal
+package io.github.faridsolgi.share.internal
 
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle

@@ -6,7 +6,7 @@ android-compileSdk = "36"
 vanniktechMavenPublish = "0.34.0"
 compose-multiplatform = "1.9.0"
 kotlinxDatetime = "0.7.1-0.6.x-compat"
-persianDateTime = "0.1.0"
+persianDateTime = "0.2.2"
 uiTooling = "1.9.2"
 
 [libraries]

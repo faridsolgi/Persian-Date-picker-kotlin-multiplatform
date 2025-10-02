@@ -1,4 +1,4 @@
-package io.github.faridsolgi.view
+package io.github.faridsolgi.date_picker.view
 
 
 import androidx.compose.animation.AnimatedContent
@@ -10,24 +10,26 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerFormatter
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -37,14 +39,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
 import io.github.faridsolgi.domain.model.DisplayMode
 import io.github.faridsolgi.domain.model.PersianDatePickerColors
 import io.github.faridsolgi.domain.model.PersianDatePickerTokens
@@ -53,14 +53,13 @@ import io.github.faridsolgi.library.generated.resources.date
 import io.github.faridsolgi.library.generated.resources.dateHint
 import io.github.faridsolgi.library.generated.resources.error_pattern_not_valid
 import io.github.faridsolgi.library.generated.resources.error_year_not_valid_range
-import io.github.faridsolgi.persiandatetime.converter.format
-import io.github.faridsolgi.persiandatetime.converter.toDateString
 import io.github.faridsolgi.persiandatetime.domain.PersianDateTime
+import io.github.faridsolgi.persiandatetime.extensions.format
+import io.github.faridsolgi.persiandatetime.extensions.toDateString
 import io.github.faridsolgi.util.DateVisualTransformation
-import io.github.faridsolgi.view.internal.DisplayModeToggleButton
-import io.github.faridsolgi.view.internal.PersianDatePickerCalendar
-import io.github.faridsolgi.view.internal.ProvideContentColorTextStyle
-import kotlinx.datetime.toLocalDateTime
+import io.github.faridsolgi.share.internal.DisplayModeToggleButton
+import io.github.faridsolgi.date_picker.view.internal.PersianDatePickerCalendar
+import io.github.faridsolgi.share.internal.ProvideContentColorTextStyle
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -86,6 +85,7 @@ fun PersianDatePicker(
     showModeToggle: Boolean = true,
     colors: PersianDatePickerColors = PersianDatePickerDefaults.colors(),
 ) {
+
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Column(modifier) {
             PersianDatePickerHeadLine(
@@ -200,29 +200,71 @@ internal fun PersianDateEnterSection(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
+@Preview(heightDp = 480, widthDp = 720)
 private fun PersianDatePickerPreview() {
     MaterialTheme {
-        val state = rememberPersianDatePickerState(yearRange = 1400..1500)
+        /*    val state = rememberPersianDatePickerState(yearRange = 1400..1500)
 
-        PersianDatePickerDialog(
-            dismissButton = {
-                TextButton({}) {
-                    Text("لغو")
-                }
-            },
-            confirmButton = {
-                TextButton({}) {
-                    Text("تایید")
-                }
-            },
-            onDismissRequest = {
+            PersianDatePickerDialog(
+                dismissButton = {
+                    TextButton({}) {
+                        Text("لغو")
+                    }
+                },
+                confirmButton = {
+                    TextButton({}) {
+                        Text("تایید")
+                    }
+                },
+                onDismissRequest = {
 
-            },
+                },
+            ) {
+                PersianDatePicker(
+                    state = state
+                )
+            }*/
+
+        var showDatePicker by remember { mutableStateOf(false) }
+        val datePickerState = rememberPersianDatePickerState()
+        val selectedDate = datePickerState.selectedDate?.let {
+            it.toDateString()
+        } ?: ""
+
+        Box(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            PersianDatePicker(
-                state = state
+            OutlinedTextField(
+                value = selectedDate,
+                onValueChange = { },
+                label = { Text("DOB") },
+                readOnly = true,
+                trailingIcon = {
+                    IconButton(onClick = { showDatePicker = !showDatePicker }) {
+                        Icon(
+                            imageVector = Icons.Default.DateRange,
+                            contentDescription = "Select date"
+                        )
+                    }
+                },
+                modifier = Modifier.fillMaxWidth().height(64.dp)
             )
+
+            if (showDatePicker) {
+                Popup(
+                    onDismissRequest = { showDatePicker = false }, alignment = Alignment.TopStart
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().offset(y = 64.dp)
+                            .shadow(elevation = 4.dp).background(MaterialTheme.colorScheme.surface)
+                            .padding(16.dp)
+                    ) {
+                        PersianDatePicker(
+                            state = datePickerState, showModeToggle = false
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -239,7 +281,6 @@ internal fun PersianDatePickerHeadLine(
     Column(
         modifier = Modifier
             .sizeIn(minWidth = PersianDatePickerTokens.ContainerWidth)
-            .background(colors.containerColor)
     ) {
         ProvideContentColorTextStyle(
             colors.titleColor,

@@ -1,7 +1,7 @@
 package io.github.faridsolgi.util
 
-import io.github.faridsolgi.persiandatetime.converter.isLeapYear
 import io.github.faridsolgi.persiandatetime.domain.PersianDateTime
+import io.github.faridsolgi.persiandatetime.extensions.isLeapYear
 
 internal object PersianCalendarUtils {
 

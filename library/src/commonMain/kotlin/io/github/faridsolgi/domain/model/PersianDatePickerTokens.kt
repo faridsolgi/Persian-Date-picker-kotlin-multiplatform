@@ -6,9 +6,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
 internal object PersianDatePickerTokens {
-    val ContainerHeight = 568.0.dp
-    val ContainerWidth = 360.0.dp
-    val DateContainerHeight = 40.0.dp
+    val ContainerHeight = 568.dp
+    val ContainerHeightMax = 682.dp
+    val ContainerWidth = 360.dp
+    val ContainerWidthMax = 432.dp
+
     val HeadlineTextStyle : TextStyle
         @Composable
         get() =  MaterialTheme.typography.headlineMedium

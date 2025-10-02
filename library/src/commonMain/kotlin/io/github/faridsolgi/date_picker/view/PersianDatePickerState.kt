@@ -1,4 +1,4 @@
-package io.github.faridsolgi.view
+package io.github.faridsolgi.date_picker.view
 
 
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,13 +12,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import io.github.faridsolgi.domain.SelectableDates
 import io.github.faridsolgi.domain.model.DisplayMode
-import io.github.faridsolgi.view.PersianDatePickerStateImpl.Companion.Saver
-import io.github.faridsolgi.persiandatetime.converter.nowPersianDate
-import io.github.faridsolgi.persiandatetime.converter.toLocalDate
-import io.github.faridsolgi.persiandatetime.converter.toPersianDateTime
+import io.github.faridsolgi.date_picker.view.PersianDatePickerStateImpl.Companion.Saver
+
 import io.github.faridsolgi.persiandatetime.domain.PersianDateTime
+import io.github.faridsolgi.persiandatetime.extensions.nowPersianDate
+import io.github.faridsolgi.persiandatetime.extensions.toEpochMilliseconds
+import io.github.faridsolgi.persiandatetime.extensions.toPersianDateTime
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -95,7 +95,7 @@ private class PersianDatePickerStateImpl(
         set(value) {
             _displayMode.value = value
             selectedDate?.let {
-                initDisplayedDate = it
+                this@PersianDatePickerStateImpl.initDisplayedDate = it
             }
         }
 
@@ -113,11 +113,9 @@ private class PersianDatePickerStateImpl(
             listSaver(
                 save = {
                     listOf(
-                        it.selectedDate?.toLocalDate()
-                            ?.atStartOfDayIn(TimeZone.currentSystemDefault())
+                        it.selectedDate
                             ?.toEpochMilliseconds(),
-                        it.initDisplayedDate.toLocalDate()
-                            .atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
+                        it.initDisplayedDate.toEpochMilliseconds(),
                         it.yearRange.first,
                         it.yearRange.last,
                         it.displayMode.value
@@ -126,14 +124,10 @@ private class PersianDatePickerStateImpl(
                 restore = { value ->
                     PersianDatePickerStateImpl(
                         initialSelectedDate = (value[0] as Long?)?.let {
-                            Instant.fromEpochMilliseconds(it)
-                                .toPersianDateTime(
-                                    TimeZone.currentSystemDefault()
-                                )
+                           PersianDateTime.parse(it)
                         },
                         initDisplayedDate = (value[1] as Long?)?.let {
-                            Instant.fromEpochMilliseconds(it)
-                                .toPersianDateTime(TimeZone.currentSystemDefault())
+                            PersianDateTime.parse(it)
                         },
                         yearRange = IntRange(value[2] as Int, value[3] as Int),
                         initialDisplayMode = DisplayMode(value[4] as Int),
