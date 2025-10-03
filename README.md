@@ -23,8 +23,11 @@ This library provides beautiful Material 3 styled dialogs and pickers for select
 ---
 
 ## 🚀 Installation
+The library is published to Maven Central. 
+The library is compatible with the Kotlin Standard Library not lower than 2.1.20. 
+If you target Android devices running below API 26, you need to use Android Gradle plugin 4.0 or newer and enable core library desugaring.
 
-This library depends on [PersianDateMultiplatform](https://github.com/faridsolgi/PersianDateMultiplatform), which itself depends on `kotlinx-datetime`. Add the following dependencies to your project:
+⚠️ Note: This library depends on the latest version of [`kotlinx-datetime`](https://github.com/Kotlin/kotlinx-datetime) and [`PersianDateTime`](https://github.com/faridsolgi/PersianDateMultiplatform), so make sure to always use the most recent release.
 
 ```kotlin
 implementation("io.github.faridsolgi:persian-date-picker:<latest-version>")
