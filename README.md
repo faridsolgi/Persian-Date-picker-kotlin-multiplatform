@@ -41,34 +41,22 @@ implementation("org.jetbrains.kotlinx:kotlinx-datetime:<latest-version>")
 
 ---
 
-## 📸 Screenshots
+## 📸  Screen Recordings
 
-<video autoplay loop muted playsinline width="400">
-  <source src="screenshots/Screen_recording_20251003_152633.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
+## Recording 1
+![Screen Recording 1](screenshots/Screen_recording_20251003_152633.gif)
 
-<video autoplay loop muted playsinline width="400">
-  <source src="screenshots/Screen_recording_20251003_152806.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
+## Recording 2
+![Screen Recording 2](screenshots/Screen_recording_20251003_152806.gif)
 
-<video autoplay loop muted playsinline width="400">
-  <source src="screenshots/Screen_recording_20251003_152911.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
+## Recording 3
+![Screen Recording 3](screenshots/Screen_recording_20251003_152911.gif)
 
-<video autoplay loop muted playsinline width="400">
-  <source src="screenshots/Screen_recording_20251003_152953.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
+## Recording 4
+![Screen Recording 4](screenshots/Screen_recording_20251003_152953.gif)
 
-<video autoplay loop muted playsinline width="400">
-  <source src="screenshots/Screen_recording_20251003_154046.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
-
-*(Replace the above image paths with your actual screenshots — e.g. `docs/assets/dialog.png`)*
+## Recording 5
+![Screen Recording 5](screenshots/Screen_recording_20251003_154046.gif)
 
 ---
 
