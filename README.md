@@ -44,27 +44,27 @@ implementation("org.jetbrains.kotlinx:kotlinx-datetime:<latest-version>")
 ## 📸 Screenshots
 
 <video autoplay loop muted playsinline width="400">
-  <source src="Screen_recording_20251003_152633.webm" type="video/webm">
+  <source src="screenshots/Screen_recording_20251003_152633.webm" type="video/webm">
   Your browser does not support the video tag.
 </video>
 
 <video autoplay loop muted playsinline width="400">
-  <source src="Screen_recording_20251003_152806.webm" type="video/webm">
+  <source src="screenshots/Screen_recording_20251003_152806.webm" type="video/webm">
   Your browser does not support the video tag.
 </video>
 
 <video autoplay loop muted playsinline width="400">
-  <source src="Screen_recording_20251003_152911.webm" type="video/webm">
+  <source src="screenshots/Screen_recording_20251003_152911.webm" type="video/webm">
   Your browser does not support the video tag.
 </video>
 
 <video autoplay loop muted playsinline width="400">
-  <source src="Screen_recording_20251003_152953.webm" type="video/webm">
+  <source src="screenshots/Screen_recording_20251003_152953.webm" type="video/webm">
   Your browser does not support the video tag.
 </video>
 
 <video autoplay loop muted playsinline width="400">
-  <source src="Screen_recording_20251003_154046.webm" type="video/webm">
+  <source src="screenshots/Screen_recording_20251003_154046.webm" type="video/webm">
   Your browser does not support the video tag.
 </video>
 
