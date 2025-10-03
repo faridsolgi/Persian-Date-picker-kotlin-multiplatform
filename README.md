@@ -233,7 +233,74 @@ PersianDatePickerDialog(
     )
 }
 ```
+### 🔹 Custom Persian Date Picker with State Parameters
 
+You can fully customize the Persian Date Picker using `rememberPersianDatePickerState` by specifying initial dates, year range, selectable dates, and display mode.
+
+```kotlin
+@Composable
+@ExperimentalMaterial3Api
+fun CustomPersianDatePickerExample() {
+    // Custom initial selected date (12 Mehr 1404)
+    val initialDate = PersianDateTime(1404, 7, 12)
+    
+    // Custom year range
+    val customYearRange = 1400..1450
+    
+    // Only allow selecting dates after today
+    val selectableDates: SelectableDates = { date ->
+        date >= PersianDateTime.now()
+    }
+
+    // Create a custom state
+    val state = rememberPersianDatePickerState(
+        initialSelectedDate = initialDate,
+        initialDisplayedDate = initialDate,
+        yearRange = customYearRange,
+        initialDisplayMode = DisplayMode.Companion.Picker,
+        selectableDates = selectableDates
+    )
+
+    var showDialog by remember { mutableStateOf(false) }
+
+    // Button to open the dialog
+    Button(onClick = { showDialog = true }) {
+        Text("انتخاب تاریخ")
+    }
+
+    if (showDialog) {
+        PersianDatePickerDialog(
+            onDismissRequest = { showDialog = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    println("Selected date: ${state.selectedDate}")
+                    showDialog = false
+                }) {
+                    Text("تایید")
+                }
+            }
+        ) {
+            PersianDatePicker(
+                state = state,
+                title = {
+                    Text(
+                        "📅 انتخاب تاریخ سفارشی",
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                },
+                headline = {
+                    Text(
+                        text = state.selectedDate?.toString() ?: "هیچ تاریخی انتخاب نشده",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            )
+        }
+    }
+}
+```
 ---
 
 ### 🔹 8. **Custom Colors**
