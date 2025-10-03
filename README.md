@@ -238,6 +238,10 @@ PersianDatePickerDialog(
 
 ### 🔹 8. **Custom Colors**
 
+By default, the colors of the `PersianDatePicker` depend on your Material app theme. You can customize the colors using the `PersianDatePickerDefaults.colors` function.  
+
+**Example:**
+
 ```kotlin
 val state = rememberPersianDatePickerState()
 
@@ -248,15 +252,19 @@ PersianDatePickerDialog(
     PersianDatePicker(
         state = state,
         colors = PersianDatePickerDefaults.colors(
-            containerColor = Color(0xFFFFF1F1),
-            selectedDayContainerColor = Color(0xFFB71C1C),
-            todayDateBorderColor = Color(0xFFD32F2F)
+            containerColor = Color.Unspecified,
+            titleColor = Color.Unspecified,
+            confirmButtonColor = Color.Unspecified,
+            dismissButtonColor = Color.Unspecified,
+            selectedDayColor = Color.Unspecified,
+            onSelectedDayColor = Color.Unspecified,
+            notSelectedDayColor = Color.Unspecified,
+            todayColor = Color.Unspecified,
+            weekdaysColor = Color.Unspecified
         )
     )
 }
-```
 
----
 
 ## 🎨 Customization
 
