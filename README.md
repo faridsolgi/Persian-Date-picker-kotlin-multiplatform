@@ -28,7 +28,7 @@ This library depends on [PersianDateMultiplatform](https://github.com/faridsolgi
 
 ```kotlin
 implementation("io.github.faridsolgi:persian-date-picker:<latest-version>")
-implementation("io.github.faridsolgi:persian-date-multiplatform:<latest-version>")
+implementation("io.github.faridsolgi:persianDateTime:<latest-version>")
 implementation("org.jetbrains.kotlinx:kotlinx-datetime:<latest-version>")
 ```
 
