@@ -43,20 +43,13 @@ implementation("org.jetbrains.kotlinx:kotlinx-datetime:<latest-version>")
 
 ## 📸  Screen Recordings
 
-## Recording 1
-![Screen Recording 1](screenshots/Screen_recording_20251003_152633.gif)
-
-## Recording 2
-![Screen Recording 2](screenshots/Screen_recording_20251003_152806.gif)
-
-## Recording 3
-![Screen Recording 3](screenshots/Screen_recording_20251003_152911.gif)
-
-## Recording 4
-![Screen Recording 4](screenshots/Screen_recording_20251003_152953.gif)
-
-## Recording 5
-![Screen Recording 5](screenshots/Screen_recording_20251003_154046.gif)
+<p float="left">
+  <img src="screenshots/Screen_recording_20251003_152633.gif" width="300px" />
+  <img src="screenshots/Screen_recording_20251003_152806.gif" width="300px" />
+  <img src="screenshots/Screen_recording_20251003_152911.gif" width="300px" />
+  <img src="screenshots/Screen_recording_20251003_152953.gif" width="300px" />
+  <img src="screenshots/Screen_recording_20251003_154046.gif" width="300px" />
+</p>
 
 ---
 
