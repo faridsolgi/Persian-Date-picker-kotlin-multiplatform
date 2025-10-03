@@ -14,6 +14,9 @@ internal object PersianDatePickerTokens {
     val HeadlineTextStyle : TextStyle
         @Composable
         get() =  MaterialTheme.typography.headlineMedium
+   val HeadlineRangeTextStyle : TextStyle
+        @Composable
+        get() =  MaterialTheme.typography.titleMedium
 
     val titleTextStyle : TextStyle
         @Composable

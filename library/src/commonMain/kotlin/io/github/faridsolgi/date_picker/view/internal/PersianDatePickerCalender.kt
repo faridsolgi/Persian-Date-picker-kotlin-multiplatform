@@ -132,7 +132,7 @@ internal fun PersianDatePickerCalendar(
 
 @OptIn(ExperimentalTime::class)
 @Composable
-internal fun MonthGrid(
+private fun MonthGrid(
     weekdays: List<String>,
     emptyDaysBefore: Int,
     daysInMonth: Int,
@@ -249,7 +249,7 @@ private fun MonthDayItem(
 }
 
 @Composable
-internal fun NavigationMonthAndYearSelection(
+private fun NavigationMonthAndYearSelection(
     displayedDate: PersianDateTime,
     state: PersianDatePickerState,
     colors: PersianDatePickerColors,
@@ -303,7 +303,7 @@ internal fun NavigationMonthAndYearSelection(
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun YearPicker(
+private fun YearPicker(
     displayedDate: PersianDateTime,
     state: PersianDatePickerState,
     colors: PersianDatePickerColors,

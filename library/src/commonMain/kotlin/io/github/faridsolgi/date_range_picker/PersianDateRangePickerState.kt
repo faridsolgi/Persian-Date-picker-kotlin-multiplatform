@@ -17,7 +17,7 @@ import io.github.faridsolgi.persiandatetime.extensions.toEpochMilliseconds
 
 /**
  * A state object that can be hoisted to observe the date range picker state. See
- * [rememberDateRangePickerState].
+ * [rememberPersianDateRangePickerState].
  */
 @Stable
 interface PersianDateRangePickerState {
@@ -85,7 +85,7 @@ interface PersianDateRangePickerState {
 
 
 /**
- * Creates a [PersianDateRangePickerState] for a [DateRangePicker] that is remembered across compositions.
+ * Creates a [PersianDateRangePickerState] for a [PersianDateRangePicker] that is remembered across compositions.
  *
  * To create a date range picker state outside composition, see the `DateRangePickerState` function.
  *
@@ -105,7 +105,7 @@ interface PersianDateRangePickerState {
  *   case a date is not allowed to be selected, it will appear disabled in the UI.
  */
 @Composable
-fun rememberDateRangePickerState(
+fun rememberPersianDateRangePickerState(
     @Suppress("AutoBoxing") initialSelectedStartDate: PersianDateTime? = null,
     @Suppress("AutoBoxing") initialSelectedEndDate: PersianDateTime? = null,
     @Suppress("AutoBoxing") initialDisplayedMonth: PersianDateTime? = initialSelectedStartDate,
@@ -191,7 +191,7 @@ fun DateRangePickerState(
 
 
 /**
- * A default implementation of the [PersianDateRangePickerState]. See [rememberDateRangePickerState].
+ * A default implementation of the [PersianDateRangePickerState]. See [rememberPersianDateRangePickerState].
  *
  * The state's [selectedStartDate] and [selectedEndDate] will provide timestamps for the
  * _beginning_ of the selected days (i.e. midnight in _UTC_ milliseconds from the epoch).
@@ -214,7 +214,7 @@ fun DateRangePickerState(
  * @throws IllegalArgumentException if the initial timestamps do not fall within the year range this
  *   state is created with, or the end date precedes the start date, or when an end date is provided
  *   without a start date (e.g. the start date was null, while the end date was not).
- * @see rememberDateRangePickerState
+ * @see rememberPersianDateRangePickerState
  */
 @Stable
 private class PersianDateRangePickerStateImpl(

@@ -106,7 +106,7 @@ fun PersianDatePicker(
 }
 
 @Composable
-fun SwitchablePersianDatePickerContents(
+private fun SwitchablePersianDatePickerContents(
     state: PersianDatePickerState,
     colors: PersianDatePickerColors,
     modifier: Modifier = Modifier,
@@ -271,7 +271,7 @@ private fun PersianDatePickerPreview() {
 
 
 @Composable
-internal fun PersianDatePickerHeadLine(
+private fun PersianDatePickerHeadLine(
     state: PersianDatePickerState,
     title: (@Composable () -> Unit)?,
     headline: (@Composable () -> Unit)?,
