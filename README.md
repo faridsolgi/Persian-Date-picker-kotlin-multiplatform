@@ -247,18 +247,14 @@ fun CustomPersianDatePickerExample() {
     // Custom year range
     val customYearRange = 1400..1450
     
-    // Only allow selecting dates after today
-    val selectableDates: SelectableDates = { date ->
-        date >= PersianDateTime.now()
-    }
+   
 
     // Create a custom state
     val state = rememberPersianDatePickerState(
         initialSelectedDate = initialDate,
         initialDisplayedDate = initialDate,
         yearRange = customYearRange,
-        initialDisplayMode = DisplayMode.Companion.Picker,
-        selectableDates = selectableDates
+        initialDisplayMode = DisplayMode.Companion.Picker
     )
 
     var showDialog by remember { mutableStateOf(false) }
