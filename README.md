@@ -43,11 +43,30 @@ implementation("org.jetbrains.kotlinx:kotlinx-datetime:<latest-version>")
 
 ## 📸 Screenshots
 
-Here are some example previews of the picker in action (replace with your own screenshots):
+<video autoplay loop muted playsinline width="400">
+  <source src="Screen_recording_20251003_152633.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
 
-| Date Picker Dialog           | Date Range Picker                 | Popup Picker               |
-| ---------------------------- | --------------------------------- | -------------------------- |
-| ![Dialog](assets/dialog.png) | ![Range Picker](assets/range.png) | ![Popup](assets/popup.png) |
+<video autoplay loop muted playsinline width="400">
+  <source src="Screen_recording_20251003_152806.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+
+<video autoplay loop muted playsinline width="400">
+  <source src="Screen_recording_20251003_152911.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+
+<video autoplay loop muted playsinline width="400">
+  <source src="Screen_recording_20251003_152953.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+
+<video autoplay loop muted playsinline width="400">
+  <source src="Screen_recording_20251003_154046.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
 
 *(Replace the above image paths with your actual screenshots — e.g. `docs/assets/dialog.png`)*
 
