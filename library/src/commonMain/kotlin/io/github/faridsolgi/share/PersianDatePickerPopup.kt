@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -127,9 +128,7 @@ fun PersianDatePickerPopup(
                 onDismissRequest = onDismissRequest, popupPositionProvider = dropdownPopupPositioner
             ) {
                 Box(
-                    modifier = modifier.requiredWidthIn(min = PersianDatePickerTokens.ContainerWidth,
-                        max= PersianDatePickerTokens.ContainerWidthMax
-                    )
+                    modifier = modifier.requiredWidth( PersianDatePickerTokens.ContainerWidth)
                         .heightIn(min= PersianDatePickerTokens.ContainerHeight,max = PersianDatePickerTokens.ContainerHeightMax)
                         .background(colors.containerColor, shape = shape)
                         .padding(top = 8.dp)
