@@ -59,6 +59,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import io.github.faridsolgi.date_picker.view.PersianDatePickerState
 import io.github.faridsolgi.domain.model.PersianDatePickerColors
 import io.github.faridsolgi.domain.model.PersianDatePickerTokens
 import io.github.faridsolgi.persiandatetime.domain.PersianDateTime
@@ -72,7 +73,6 @@ import io.github.faridsolgi.util.canNavigateToNextMonth
 import io.github.faridsolgi.util.canNavigateToPreviousMonth
 import io.github.faridsolgi.util.navigateToNextMonth
 import io.github.faridsolgi.util.navigateToPreviousMonth
-import io.github.faridsolgi.date_picker.view.PersianDatePickerState
 import kotlinx.datetime.TimeZone
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -119,17 +119,22 @@ internal fun PersianDatePickerCalendar(
     Column(modifier = modifier) {
         NavigationMonthAndYearSelection(
             displayedDate = displayedDate,
-            state = state,
             colors = colors,
             navigateToPreviousMonth = { state.navigateToPreviousMonth() },
             navigateToNextMonth = { state.navigateToNextMonth() },
+            nextAvailable = state.canNavigateToNextMonth,
+            previousAvailable = state.canNavigateToPreviousMonth,
+            yearRange = state.yearRange,
+            onYearSelect = {
+                state.initDisplayedDate = it
+            },
         )
         MonthGrid(
             weekdays = weekdays,
             emptyDaysBefore = emptyDaysBefore,
             daysInMonth = monthDayCount,
             displayedDate = displayedDate,
-            state = state,
+            selectedDate = state.selectedDate,
             colors = colors,
             onDayClick = { state.selectedDate = it }
         )
@@ -142,8 +147,8 @@ private fun MonthGrid(
     weekdays: List<String>,
     emptyDaysBefore: Int,
     daysInMonth: Int,
+    selectedDate: PersianDateTime?,
     displayedDate: PersianDateTime,
-    state: PersianDatePickerState,
     colors: PersianDatePickerColors,
     onDayClick: (PersianDateTime) -> Unit,
 ) {
@@ -173,7 +178,6 @@ private fun MonthGrid(
                     )
                 }
             }
-
         }
 
         // Empty cells before the first day
@@ -192,7 +196,7 @@ private fun MonthGrid(
 
             MonthDayItem(
                 date = currentDate,
-                isSelected = state.selectedDate == currentDate,
+                isSelected = selectedDate == currentDate,
                 isToday = currentDate == Clock.System.nowPersianDate(TimeZone.currentSystemDefault()),
                 colors = colors,
                 onDayClick = onDayClick
@@ -267,10 +271,13 @@ private fun MonthDayItem(
 @Composable
 private fun NavigationMonthAndYearSelection(
     displayedDate: PersianDateTime,
-    state: PersianDatePickerState,
+    nextAvailable: Boolean,
+    previousAvailable: Boolean,
+    yearRange: IntRange,
     colors: PersianDatePickerColors,
     navigateToPreviousMonth: () -> Unit,
     navigateToNextMonth: () -> Unit,
+    onYearSelect: (PersianDateTime) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -280,9 +287,9 @@ private fun NavigationMonthAndYearSelection(
     ) {
         YearPicker(
             displayedDate = displayedDate,
-            state = state,
+            yearRange = yearRange,
             colors = colors,
-            onYearSelect = { state.initDisplayedDate = it }
+            onYearSelect = onYearSelect
         )
 
         Spacer(Modifier.weight(1f))
@@ -290,10 +297,9 @@ private fun NavigationMonthAndYearSelection(
         Row {
             IconButton(
                 onClick = {
-                    state.canNavigateToNextMonth {
-                        navigateToNextMonth()
-                    }
+                    navigateToNextMonth()
                 },
+                enabled = nextAvailable,
                 modifier = Modifier.semantics {
                     contentDescription = "Next month"
                 }
@@ -303,10 +309,9 @@ private fun NavigationMonthAndYearSelection(
 
             IconButton(
                 onClick = {
-                    state.canNavigateToPreviousMonth {
-                        navigateToPreviousMonth()
-                    }
+                    navigateToPreviousMonth()
                 },
+                enabled = previousAvailable,
                 modifier = Modifier.semantics {
                     contentDescription = "Previous month"
                 }
@@ -321,7 +326,7 @@ private fun NavigationMonthAndYearSelection(
 @Composable
 private fun YearPicker(
     displayedDate: PersianDateTime,
-    state: PersianDatePickerState,
+    yearRange: IntRange,
     colors: PersianDatePickerColors,
     onYearSelect: (PersianDateTime) -> Unit,
 ) {
@@ -339,7 +344,7 @@ private fun YearPicker(
     // Scroll to selected year when expanded
     LaunchedEffect(expanded, displayedDate.year) {
         if (expanded) {
-            val yearsList = state.yearRange.toList()
+            val yearsList = yearRange.toList()
             val selectedYearIndex = yearsList.indexOf(displayedDate.year)
             if (selectedYearIndex >= 0) {
                 gridState.animateScrollToItem(selectedYearIndex)
@@ -386,7 +391,7 @@ private fun YearPicker(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             state = gridState
                         ) {
-                            items(state.yearRange.toList()) { year ->
+                            items(yearRange.toList()) { year ->
                                 val isSelectedYear = year == displayedDate.year
                                 val isCurrentYear =
                                     Clock.System.nowPersianDate(TimeZone.currentSystemDefault()).year == year
