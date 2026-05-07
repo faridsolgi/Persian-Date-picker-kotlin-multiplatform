@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -33,14 +34,17 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.outlined.ChevronLeft
 import androidx.compose.material.icons.outlined.ChevronRight
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,6 +53,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -75,6 +80,7 @@ import kotlin.time.ExperimentalTime
 private const val DAYS_IN_WEEK = 7
 private const val YEARS_IN_ROW = 3
 private const val MAX_CALENDAR_ROWS = 6
+internal val RecommendedSizeForAccessibility = 48.dp
 
 @OptIn(ExperimentalTime::class, ExperimentalAnimationApi::class)
 @Composable
@@ -149,23 +155,32 @@ private fun MonthGrid(
     ) {
         // Weekday headers
         items(weekdays) { weekday ->
-            ProvideTextStyle(MaterialTheme.typography.labelMedium){
-                Text(
-                    text = weekday,
-                    modifier = Modifier.semantics {
-                        contentDescription = "Weekday: $weekday"
-                    },
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = colors.weekdaysColor
-                )
+            ProvideTextStyle(MaterialTheme.typography.bodyLarge) {
+                Box(
+                    modifier = Modifier
+                        .requiredSize(RecommendedSizeForAccessibility)
+                        .semantics {
+                            contentDescription = "Weekday: $weekday"
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+
+                    Text(
+                        text = weekday,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = colors.weekdaysColor
+                    )
+                }
             }
 
         }
 
         // Empty cells before the first day
         items(emptyDaysBefore) {
-            Spacer(Modifier.aspectRatio(1f))
+            Spacer(
+                Modifier.aspectRatio(1f)
+            )
         }
 
         // Days of the month
@@ -216,35 +231,36 @@ private fun MonthDayItem(
         }
     ) {
 
-    Box(
-        modifier = Modifier
-            .aspectRatio(1f)
-            .background(backgroundColor, CircleShape)
-            .border(
-                width = PersianDatePickerTokens.todayDateBorderWidth,
-                color = borderColor,
-                shape = CircleShape
-            )
-            .clickable { onDayClick(date) }
-            .semantics {
-                contentDescription = buildString {
-                    append("Day ${date.day}")
-                    if (isToday) append(", Today")
-                    if (isSelected) append(", Selected")
-                }
-            },
-        contentAlignment = Alignment.Center
-    ) {
-        ProvideContentColorTextStyle(
-            textStyle = MaterialTheme.typography.bodyMedium,
-            contentColor = textColor
+        Box(
+            modifier = Modifier
+                .aspectRatio(1f)
+                .background(backgroundColor, CircleShape)
+                .border(
+                    width = PersianDatePickerTokens.todayDateBorderWidth,
+                    color = borderColor,
+                    shape = CircleShape
+                )
+                .clip(CircleShape)
+                .clickable { onDayClick(date) }
+                .semantics {
+                    contentDescription = buildString {
+                        append("Day ${date.day}")
+                        if (isToday) append(", Today")
+                        if (isSelected) append(", Selected")
+                    }
+                },
+            contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = date.day.toString(),
-                textAlign = TextAlign.Center
-            )
+            ProvideContentColorTextStyle(
+                textStyle = MaterialTheme.typography.bodyMedium,
+                contentColor = textColor
+            ) {
+                Text(
+                    text = date.day.toString(),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
-    }
     }
 }
 
@@ -333,18 +349,19 @@ private fun YearPicker(
 
     ProvideTextStyle(PersianDatePickerTokens.SelectionYearLabelTextFont) {
         Column {
-            if (expanded) {
-                Spacer(Modifier.height(16.dp))
-            }
-
             // Clickable header
-            Row(
+            TextButton(
+                onClick = { expanded = !expanded },
+                shape = CircleShape,
+                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                elevation = null,
+                border = null,
                 modifier = Modifier
-                    .clickable { expanded = !expanded }
+                    .clip(CircleShape)
+                    .clickable { }
                     .semantics {
                         contentDescription = "Select year and month: $formattedDate"
                     },
-                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = formattedDate)
                 Spacer(Modifier.width(8.dp))
@@ -397,11 +414,20 @@ private fun YearPicker(
                                 )
                                 Box(
                                     modifier = Modifier
+                                        .requiredSize(
+                                            width = 72.0.dp,
+                                            height = 36.0.dp,
+                                        )
                                         .background(
                                             backgroundColor,
                                             MaterialTheme.shapes.extraLarge
                                         )
-                                        .border(width = 1.dp, borderColor, MaterialTheme.shapes.extraLarge)
+                                        .border(
+                                            width = 1.dp,
+                                            borderColor,
+                                            MaterialTheme.shapes.extraLarge
+                                        )
+                                        .clip(CircleShape)
                                         .clickable {
                                             onYearSelect(displayedDate.copy(year = year))
                                             expanded = false
