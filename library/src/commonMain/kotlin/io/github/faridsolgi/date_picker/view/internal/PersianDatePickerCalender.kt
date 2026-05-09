@@ -297,11 +297,11 @@ private fun NavigationMonthAndYearSelection(
         Row {
             IconButton(
                 onClick = {
-                    navigateToNextMonth()
+                    navigateToPreviousMonth()
                 },
                 enabled = nextAvailable,
                 modifier = Modifier.semantics {
-                    contentDescription = "Next month"
+                    contentDescription = "Previous month"
                 }
             ) {
                 Icon(Icons.Outlined.ChevronRight, contentDescription = null)
@@ -309,11 +309,11 @@ private fun NavigationMonthAndYearSelection(
 
             IconButton(
                 onClick = {
-                    navigateToPreviousMonth()
+                    navigateToNextMonth()
                 },
                 enabled = previousAvailable,
                 modifier = Modifier.semantics {
-                    contentDescription = "Previous month"
+                    contentDescription = "Next month"
                 }
             ) {
                 Icon(Icons.Outlined.ChevronLeft, contentDescription = null)
