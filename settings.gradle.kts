@@ -1,8 +1,5 @@
 pluginManagement {
     repositories {
-        maven {
-            url = uri("https://maven.myket.ir")
-        }
         maven(uri("https://en-mirror.ir/"))
         google()
         mavenCentral()
@@ -13,10 +10,6 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
-        maven {
-            url = uri("https://maven.myket.ir")
-        }
-
         maven(uri("https://en-mirror.ir/"))
         google()
         mavenLocal()
