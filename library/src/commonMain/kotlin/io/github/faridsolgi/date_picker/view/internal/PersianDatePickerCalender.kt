@@ -13,6 +13,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,6 +56,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -136,7 +138,9 @@ internal fun PersianDatePickerCalendar(
             displayedDate = displayedDate,
             selectedDate = state.selectedDate,
             colors = colors,
-            onDayClick = { state.selectedDate = it }
+            onDayClick = { state.selectedDate = it },
+            navigateToPreviousMonth = { state.navigateToPreviousMonth() },
+            navigateToNextMonth = { state.navigateToNextMonth() },
         )
     }
 }
@@ -151,10 +155,42 @@ private fun MonthGrid(
     displayedDate: PersianDateTime,
     colors: PersianDatePickerColors,
     onDayClick: (PersianDateTime) -> Unit,
+    navigateToPreviousMonth: () -> Unit,
+    navigateToNextMonth: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
+    val swipeThreshold = 120f
+
+    var totalDrag by remember {
+        mutableStateOf(0f)
+    }
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(DAYS_IN_WEEK),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .pointerInput(Unit) {
+                detectHorizontalDragGestures(
+                    onHorizontalDrag = { _, dragAmount ->
+                        totalDrag += dragAmount
+                    },
+
+                    onDragEnd = {
+
+                        when {
+                            totalDrag < -swipeThreshold -> {
+                                navigateToPreviousMonth()
+                            }
+
+                            totalDrag > swipeThreshold -> {
+                                navigateToNextMonth()
+                            }
+                        }
+
+                        totalDrag = 0f
+                    }
+                )
+            },
         verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
         horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally)
     ) {
