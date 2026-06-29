@@ -1,7 +1,7 @@
 package io.github.faridsolgi.util
 
-import io.github.faridsolgi.persiandatetime.domain.PersianDateTime
 import io.github.faridsolgi.date_picker.view.PersianDatePickerState
+import io.github.faridsolgi.persiandatetime.domain.PersianDateTime
 
 
 internal fun PersianDatePickerState.navigateToPreviousMonth() {
@@ -40,19 +40,20 @@ internal fun PersianDatePickerState.navigateToNextMonth() {
 }
 
 
-internal fun PersianDatePickerState.canNavigateToPreviousMonth(action: () -> Unit) {
-    initDisplayedDate.let { current ->
-        if (current.month != 1 || current.year > yearRange.first) {
-            action()
+internal val PersianDatePickerState.canNavigateToPreviousMonth: Boolean
+    get() {
+        initDisplayedDate.let {
+            if (it.month != 1) return true
+            if (it.year > yearRange.first) return true
+            return false
         }
     }
-}
 
-
-internal fun PersianDatePickerState.canNavigateToNextMonth(action: () -> Unit) {
-    initDisplayedDate.let {
-        if (it.month != 12 || it.year < yearRange.last) {
-            action()
+internal val PersianDatePickerState.canNavigateToNextMonth: Boolean
+    get() {
+        initDisplayedDate.let {
+            if (it.month != 12) return true
+            if (it.year < yearRange.last) return true
+            return false
         }
     }
-}

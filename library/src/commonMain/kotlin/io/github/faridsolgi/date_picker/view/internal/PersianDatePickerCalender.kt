@@ -13,6 +13,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -33,14 +35,17 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.outlined.ChevronLeft
 import androidx.compose.material.icons.outlined.ChevronRight
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,11 +54,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import io.github.faridsolgi.date_picker.view.PersianDatePickerState
 import io.github.faridsolgi.domain.model.PersianDatePickerColors
 import io.github.faridsolgi.domain.model.PersianDatePickerTokens
 import io.github.faridsolgi.persiandatetime.domain.PersianDateTime
@@ -67,7 +75,6 @@ import io.github.faridsolgi.util.canNavigateToNextMonth
 import io.github.faridsolgi.util.canNavigateToPreviousMonth
 import io.github.faridsolgi.util.navigateToNextMonth
 import io.github.faridsolgi.util.navigateToPreviousMonth
-import io.github.faridsolgi.date_picker.view.PersianDatePickerState
 import kotlinx.datetime.TimeZone
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -75,6 +82,7 @@ import kotlin.time.ExperimentalTime
 private const val DAYS_IN_WEEK = 7
 private const val YEARS_IN_ROW = 3
 private const val MAX_CALENDAR_ROWS = 6
+internal val RecommendedSizeForAccessibility = 48.dp
 
 @OptIn(ExperimentalTime::class, ExperimentalAnimationApi::class)
 @Composable
@@ -113,19 +121,26 @@ internal fun PersianDatePickerCalendar(
     Column(modifier = modifier) {
         NavigationMonthAndYearSelection(
             displayedDate = displayedDate,
-            state = state,
             colors = colors,
             navigateToPreviousMonth = { state.navigateToPreviousMonth() },
             navigateToNextMonth = { state.navigateToNextMonth() },
+            nextAvailable = state.canNavigateToNextMonth,
+            previousAvailable = state.canNavigateToPreviousMonth,
+            yearRange = state.yearRange,
+            onYearSelect = {
+                state.initDisplayedDate = it
+            },
         )
         MonthGrid(
             weekdays = weekdays,
             emptyDaysBefore = emptyDaysBefore,
             daysInMonth = monthDayCount,
             displayedDate = displayedDate,
-            state = state,
+            selectedDate = state.selectedDate,
             colors = colors,
-            onDayClick = { state.selectedDate = it }
+            onDayClick = { state.selectedDate = it },
+            navigateToPreviousMonth = { state.navigateToPreviousMonth() },
+            navigateToNextMonth = { state.navigateToNextMonth() },
         )
     }
 }
@@ -136,36 +151,76 @@ private fun MonthGrid(
     weekdays: List<String>,
     emptyDaysBefore: Int,
     daysInMonth: Int,
+    selectedDate: PersianDateTime?,
     displayedDate: PersianDateTime,
-    state: PersianDatePickerState,
     colors: PersianDatePickerColors,
     onDayClick: (PersianDateTime) -> Unit,
+    navigateToPreviousMonth: () -> Unit,
+    navigateToNextMonth: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
+    val swipeThreshold = 120f
+
+    var totalDrag by remember {
+        mutableStateOf(0f)
+    }
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(DAYS_IN_WEEK),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .pointerInput(Unit) {
+                detectHorizontalDragGestures(
+                    onHorizontalDrag = { _, dragAmount ->
+                        totalDrag += dragAmount
+                    },
+
+                    onDragEnd = {
+
+                        when {
+                            totalDrag < -swipeThreshold -> {
+                                navigateToPreviousMonth()
+                            }
+
+                            totalDrag > swipeThreshold -> {
+                                navigateToNextMonth()
+                            }
+                        }
+
+                        totalDrag = 0f
+                    }
+                )
+            },
         verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
         horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally)
     ) {
         // Weekday headers
         items(weekdays) { weekday ->
-            ProvideTextStyle(MaterialTheme.typography.labelMedium){
-                Text(
-                    text = weekday,
-                    modifier = Modifier.semantics {
-                        contentDescription = "Weekday: $weekday"
-                    },
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = colors.weekdaysColor
-                )
-            }
+            ProvideTextStyle(MaterialTheme.typography.bodyLarge) {
+                Box(
+                    modifier = Modifier
+                        .requiredSize(RecommendedSizeForAccessibility)
+                        .semantics {
+                            contentDescription = "Weekday: $weekday"
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
 
+                    Text(
+                        text = weekday,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = colors.weekdaysColor
+                    )
+                }
+            }
         }
 
         // Empty cells before the first day
         items(emptyDaysBefore) {
-            Spacer(Modifier.aspectRatio(1f))
+            Spacer(
+                Modifier.aspectRatio(1f)
+            )
         }
 
         // Days of the month
@@ -177,7 +232,7 @@ private fun MonthGrid(
 
             MonthDayItem(
                 date = currentDate,
-                isSelected = state.selectedDate == currentDate,
+                isSelected = selectedDate == currentDate,
                 isToday = currentDate == Clock.System.nowPersianDate(TimeZone.currentSystemDefault()),
                 colors = colors,
                 onDayClick = onDayClick
@@ -216,45 +271,49 @@ private fun MonthDayItem(
         }
     ) {
 
-    Box(
-        modifier = Modifier
-            .aspectRatio(1f)
-            .background(backgroundColor, CircleShape)
-            .border(
-                width = PersianDatePickerTokens.todayDateBorderWidth,
-                color = borderColor,
-                shape = CircleShape
-            )
-            .clickable { onDayClick(date) }
-            .semantics {
-                contentDescription = buildString {
-                    append("Day ${date.day}")
-                    if (isToday) append(", Today")
-                    if (isSelected) append(", Selected")
-                }
-            },
-        contentAlignment = Alignment.Center
-    ) {
-        ProvideContentColorTextStyle(
-            textStyle = MaterialTheme.typography.bodyMedium,
-            contentColor = textColor
+        Box(
+            modifier = Modifier
+                .aspectRatio(1f)
+                .background(backgroundColor, CircleShape)
+                .border(
+                    width = PersianDatePickerTokens.todayDateBorderWidth,
+                    color = borderColor,
+                    shape = CircleShape
+                )
+                .clip(CircleShape)
+                .clickable { onDayClick(date) }
+                .semantics {
+                    contentDescription = buildString {
+                        append("Day ${date.day}")
+                        if (isToday) append(", Today")
+                        if (isSelected) append(", Selected")
+                    }
+                },
+            contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = date.day.toString(),
-                textAlign = TextAlign.Center
-            )
+            ProvideContentColorTextStyle(
+                textStyle = MaterialTheme.typography.bodyMedium,
+                contentColor = textColor
+            ) {
+                Text(
+                    text = date.day.toString(),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
-    }
     }
 }
 
 @Composable
 private fun NavigationMonthAndYearSelection(
     displayedDate: PersianDateTime,
-    state: PersianDatePickerState,
+    nextAvailable: Boolean,
+    previousAvailable: Boolean,
+    yearRange: IntRange,
     colors: PersianDatePickerColors,
     navigateToPreviousMonth: () -> Unit,
     navigateToNextMonth: () -> Unit,
+    onYearSelect: (PersianDateTime) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -264,9 +323,9 @@ private fun NavigationMonthAndYearSelection(
     ) {
         YearPicker(
             displayedDate = displayedDate,
-            state = state,
+            yearRange = yearRange,
             colors = colors,
-            onYearSelect = { state.initDisplayedDate = it }
+            onYearSelect = onYearSelect
         )
 
         Spacer(Modifier.weight(1f))
@@ -274,12 +333,11 @@ private fun NavigationMonthAndYearSelection(
         Row {
             IconButton(
                 onClick = {
-                    state.canNavigateToNextMonth {
-                        navigateToNextMonth()
-                    }
+                    navigateToPreviousMonth()
                 },
+                enabled = nextAvailable,
                 modifier = Modifier.semantics {
-                    contentDescription = "Next month"
+                    contentDescription = "Previous month"
                 }
             ) {
                 Icon(Icons.Outlined.ChevronRight, contentDescription = null)
@@ -287,12 +345,11 @@ private fun NavigationMonthAndYearSelection(
 
             IconButton(
                 onClick = {
-                    state.canNavigateToPreviousMonth {
-                        navigateToPreviousMonth()
-                    }
+                    navigateToNextMonth()
                 },
+                enabled = previousAvailable,
                 modifier = Modifier.semantics {
-                    contentDescription = "Previous month"
+                    contentDescription = "Next month"
                 }
             ) {
                 Icon(Icons.Outlined.ChevronLeft, contentDescription = null)
@@ -305,7 +362,7 @@ private fun NavigationMonthAndYearSelection(
 @Composable
 private fun YearPicker(
     displayedDate: PersianDateTime,
-    state: PersianDatePickerState,
+    yearRange: IntRange,
     colors: PersianDatePickerColors,
     onYearSelect: (PersianDateTime) -> Unit,
 ) {
@@ -323,7 +380,7 @@ private fun YearPicker(
     // Scroll to selected year when expanded
     LaunchedEffect(expanded, displayedDate.year) {
         if (expanded) {
-            val yearsList = state.yearRange.toList()
+            val yearsList = yearRange.toList()
             val selectedYearIndex = yearsList.indexOf(displayedDate.year)
             if (selectedYearIndex >= 0) {
                 gridState.animateScrollToItem(selectedYearIndex)
@@ -333,18 +390,19 @@ private fun YearPicker(
 
     ProvideTextStyle(PersianDatePickerTokens.SelectionYearLabelTextFont) {
         Column {
-            if (expanded) {
-                Spacer(Modifier.height(16.dp))
-            }
-
             // Clickable header
-            Row(
+            TextButton(
+                onClick = { expanded = !expanded },
+                shape = CircleShape,
+                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                elevation = null,
+                border = null,
                 modifier = Modifier
-                    .clickable { expanded = !expanded }
+                    .clip(CircleShape)
+                    .clickable { }
                     .semantics {
                         contentDescription = "Select year and month: $formattedDate"
                     },
-                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = formattedDate)
                 Spacer(Modifier.width(8.dp))
@@ -369,7 +427,7 @@ private fun YearPicker(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             state = gridState
                         ) {
-                            items(state.yearRange.toList()) { year ->
+                            items(yearRange.toList()) { year ->
                                 val isSelectedYear = year == displayedDate.year
                                 val isCurrentYear =
                                     Clock.System.nowPersianDate(TimeZone.currentSystemDefault()).year == year
@@ -397,11 +455,20 @@ private fun YearPicker(
                                 )
                                 Box(
                                     modifier = Modifier
+                                        .requiredSize(
+                                            width = 72.0.dp,
+                                            height = 36.0.dp,
+                                        )
                                         .background(
                                             backgroundColor,
                                             MaterialTheme.shapes.extraLarge
                                         )
-                                        .border(width = 1.dp, borderColor, MaterialTheme.shapes.extraLarge)
+                                        .border(
+                                            width = 1.dp,
+                                            borderColor,
+                                            MaterialTheme.shapes.extraLarge
+                                        )
+                                        .clip(CircleShape)
                                         .clickable {
                                             onYearSelect(displayedDate.copy(year = year))
                                             expanded = false

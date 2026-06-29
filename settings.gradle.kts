@@ -19,3 +19,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "persian-date-picker"
 include(":library")
+include(":samples")
