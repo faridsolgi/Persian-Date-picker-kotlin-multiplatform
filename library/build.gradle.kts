@@ -11,12 +11,12 @@ plugins {
     alias(libs.plugins.vanniktech.mavenPublish)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    id("org.jetbrains.dokka") version "2.0.0"
+    id("org.jetbrains.dokka") version "2.2.0"
     signing
 }
 
 group = "io.github.faridsolgi"
-version = "0.0.13-beta3"
+version = "0.0.14"
 
 kotlin {
     jvm()
