@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import io.github.faridsolgi.date_picker.view.PersianDateEnterSection
 import io.github.faridsolgi.date_picker.view.PersianDatePickerDefaults
+import io.github.faridsolgi.date_picker.view.PersianDatePickerTypography
 import io.github.faridsolgi.date_picker.view.internal.PersianDatePickerCalendar
 import io.github.faridsolgi.date_range_picker.internal.PersianDateRangePickerCalender
 import io.github.faridsolgi.domain.model.DisplayMode
@@ -62,17 +63,33 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
     },
     showModeToggle: Boolean = true,
     focusRequester: FocusRequester? = remember { FocusRequester() },
+    typography: PersianDatePickerTypography = PersianDatePickerDefaults.typography(),
 ) {
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        Column(modifier) {
-            PersianDatePickerHeadLine(
-                state,
-                title, headline,
-                showModeToggle,
-                colors
-            )
-            HorizontalDivider()
-            SwitchablePersianDateRangePickerContents(state,colors, Modifier.padding(16.dp))
+    val pickerMaterialTypography = MaterialTheme.typography.copy(
+        titleLarge = typography.title,
+        bodyLarge = typography.headline,
+        bodyMedium = typography.day,
+        labelLarge = typography.button,
+        labelMedium = typography.weekday,
+        labelSmall = typography.weekday
+    )
+
+    MaterialTheme(typography = pickerMaterialTypography) {
+        CompositionLocalProvider(
+            LocalLayoutDirection provides LayoutDirection.Rtl,
+            androidx.compose.material3.LocalTextStyle provides typography.day
+        ) {
+            Column(modifier) {
+                PersianDatePickerHeadLine(
+                    state,
+                    title, headline,
+                    showModeToggle,
+                    colors,
+                    typography
+                )
+                HorizontalDivider()
+                SwitchablePersianDateRangePickerContents(state, colors, Modifier.padding(16.dp))
+            }
         }
     }
 
@@ -115,6 +132,7 @@ internal fun PersianDatePickerHeadLine(
     headline: (@Composable () -> Unit)?,
     showModeToggle: Boolean,
     colors: PersianDatePickerColors,
+    typography: PersianDatePickerTypography,
 ) {
     Column(
         modifier = Modifier
@@ -122,7 +140,9 @@ internal fun PersianDatePickerHeadLine(
     ) {
         ProvideContentColorTextStyle(
             colors.titleColor,
-            PersianDatePickerTokens.titleTextStyle
+            PersianDatePickerTokens.titleTextStyle.copy(
+                fontFamily = typography.title.fontFamily
+            )
         ) {
             title?.invoke()
         }
@@ -133,7 +153,9 @@ internal fun PersianDatePickerHeadLine(
         ) {
             ProvideContentColorTextStyle(
                 colors.headerColor,
-                PersianDatePickerTokens.HeadlineRangeTextStyle
+                PersianDatePickerTokens.HeadlineRangeTextStyle.copy(
+                    fontFamily = typography.headline.fontFamily
+                )
             ) {
 
                 headline?.invoke()

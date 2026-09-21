@@ -1,11 +1,10 @@
 package io.github.faridsolgi.date_picker.view
 
+
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -13,19 +12,16 @@ import androidx.compose.ui.unit.dp
 import io.github.faridsolgi.domain.SelectableDates
 import io.github.faridsolgi.domain.model.DisplayMode
 import io.github.faridsolgi.domain.model.PersianDatePickerColors
-import io.github.faridsolgi.library.generated.resources.dateInputHeadline
-import io.github.faridsolgi.library.generated.resources.datePickerHeadline
 import io.github.faridsolgi.library.generated.resources.Res
+import io.github.faridsolgi.library.generated.resources.dateInputHeadline
 import io.github.faridsolgi.library.generated.resources.dateInputTitle
+import io.github.faridsolgi.library.generated.resources.datePickerHeadline
 import io.github.faridsolgi.library.generated.resources.datePickerTitle
 import io.github.faridsolgi.persiandatetime.domain.PersianDateTime
 import io.github.faridsolgi.persiandatetime.extensions.format
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
 
-val LocalPersianDatePickerTypography = staticCompositionLocalOf {
-    Typography() // Fallback default
-}
 object PersianDatePickerDefaults {
     val YearRange = IntRange(1300, 1499)
 
@@ -79,15 +75,28 @@ object PersianDatePickerDefaults {
     @Composable
     fun DatePickerTitle(displayMode: DisplayMode, modifier: Modifier = Modifier) {
         when (displayMode) {
-            DisplayMode.Companion.Picker ->
+            DisplayMode.Picker ->
                 Text(
                     text = stringResource(Res.string.datePickerTitle),
                     modifier = modifier
                 )
 
-            DisplayMode.Companion.Input ->
+            DisplayMode.Input ->
                 Text(text = stringResource(Res.string.dateInputTitle), modifier = modifier)
         }
+    }
+
+    @Composable
+    fun typography(): PersianDatePickerTypography {
+        val typography = MaterialTheme.typography
+
+        return PersianDatePickerTypography(
+            title = typography.titleLarge,
+            headline = typography.bodyLarge,
+            day = typography.labelLarge,
+            weekday = typography.labelMedium,
+            button = typography.labelLarge
+        )
     }
 
     @OptIn(ExperimentalTime::class)
@@ -107,8 +116,8 @@ object PersianDatePickerDefaults {
                 year()
             }
                 ?: when (displayMode) {
-                    DisplayMode.Companion.Picker -> stringResource(Res.string.datePickerHeadline)
-                    DisplayMode.Companion.Input -> stringResource(Res.string.dateInputHeadline)
+                    DisplayMode.Picker -> stringResource(Res.string.datePickerHeadline)
+                    DisplayMode.Input -> stringResource(Res.string.dateInputHeadline)
                     else -> ""
                 }
 
