@@ -84,23 +84,40 @@ fun PersianDatePicker(
     },
     showModeToggle: Boolean = true,
     colors: PersianDatePickerColors = PersianDatePickerDefaults.colors(),
+    typography: PersianDatePickerTypography =
+        PersianDatePickerDefaults.typography()
 ) {
 
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        Column(modifier) {
-            PersianDatePickerHeadLine(
-                state,
-                title,
-                headline,
-                showModeToggle,
-                colors
-            )
-            HorizontalDivider()
-            SwitchablePersianDatePickerContents(
-                state, colors,
-                Modifier.padding(horizontal = 16.dp)
-            )
+    val pickerMaterialTypography = MaterialTheme.typography.copy(
+        titleLarge = typography.title,
+        bodyLarge = typography.headline,
+        bodyMedium = typography.day,
+        labelLarge = typography.button,
+        labelMedium = typography.weekday,
+        labelSmall = typography.weekday
+    )
 
+    MaterialTheme(typography = pickerMaterialTypography) {
+        CompositionLocalProvider(
+            LocalLayoutDirection provides LayoutDirection.Rtl,
+            LocalTextStyle provides typography.day
+        ) {
+            Column(modifier) {
+                PersianDatePickerHeadLine(
+                    state = state,
+                    title = title,
+                    headline = headline,
+                    showModeToggle = showModeToggle,
+                    colors = colors,
+                    typography = typography
+                )
+                HorizontalDivider()
+                SwitchablePersianDatePickerContents(
+                    state,
+                    colors,
+                    Modifier.padding(horizontal = 16.dp)
+                )
+            }
         }
     }
 }
@@ -277,6 +294,7 @@ private fun PersianDatePickerHeadLine(
     headline: (@Composable () -> Unit)?,
     showModeToggle: Boolean,
     colors: PersianDatePickerColors,
+    typography: PersianDatePickerTypography,
 ) {
     Column(
         modifier = Modifier
@@ -284,7 +302,9 @@ private fun PersianDatePickerHeadLine(
     ) {
         ProvideContentColorTextStyle(
             colors.titleColor,
-            PersianDatePickerTokens.titleTextStyle
+            PersianDatePickerTokens.titleTextStyle.copy(
+                fontFamily = typography.title.fontFamily
+            )
         ) {
             title?.invoke()
         }
@@ -296,7 +316,9 @@ private fun PersianDatePickerHeadLine(
         ) {
             ProvideContentColorTextStyle(
                 colors.headerColor,
-                PersianDatePickerTokens.HeadlineTextStyle
+                PersianDatePickerTokens.HeadlineTextStyle.copy(
+                    fontFamily = typography.headline.fontFamily
+                )
             ) {
                 headline?.invoke()
             }

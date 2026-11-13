@@ -30,6 +30,7 @@ import androidx.compose.ui.window.DialogProperties
 import io.github.faridsolgi.domain.model.PersianDatePickerColors
 import io.github.faridsolgi.domain.model.PersianDatePickerTokens
 import io.github.faridsolgi.date_picker.view.PersianDatePickerDefaults
+import io.github.faridsolgi.date_picker.view.PersianDatePickerTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,41 +43,52 @@ fun PersianDatePickerDialog(
     tonalElevation: Dp = PersianDatePickerDefaults.TonalElevation,
     colors: PersianDatePickerColors = PersianDatePickerDefaults.colors(),
     properties: DialogProperties = DialogProperties(usePlatformDefaultWidth = false),
+    typography: PersianDatePickerTypography = PersianDatePickerDefaults.typography(),
     content: @Composable ColumnScope.() -> Unit,
 ) {
-
-        BasicAlertDialog(
-            onDismissRequest = onDismissRequest,
-            modifier = modifier.wrapContentHeight(),
-            properties = properties
+    BasicAlertDialog(
+        onDismissRequest = onDismissRequest,
+        modifier = modifier.wrapContentHeight(),
+        properties = properties
+    ) {
+        MaterialTheme(
+            typography = MaterialTheme.typography.copy(
+                titleLarge = typography.title,
+                bodyLarge = typography.headline,
+                bodyMedium = typography.day,
+                labelLarge = typography.button,
+                labelMedium = typography.weekday,
+                labelSmall = typography.weekday
+            )
         ) {
             Surface(
-                modifier =
-                    Modifier.Companion.requiredWidth(PersianDatePickerTokens.ContainerWidth)
-                        .heightIn(max = PersianDatePickerTokens.ContainerHeight),
+                modifier = Modifier
+                    .requiredWidth(PersianDatePickerTokens.ContainerWidth)
+                    .heightIn(max = PersianDatePickerTokens.ContainerHeight),
                 shape = shape,
                 color = colors.containerColor,
                 tonalElevation = tonalElevation,
             ) {
                 Column(verticalArrangement = Arrangement.SpaceBetween) {
-                    // Wrap the content with a Box and Modifier.weight(1f) to ensure that any "confirm"
-                    // and "dismiss" buttons are not pushed out of view when running on small screens,
-                    // or when nesting a DateRangePicker.
-                    // Fill is false to support collapsing the dialog's height when switching to input
-                    // mode.
-                    Box(Modifier.weight(1f, fill = false)) { this@Column.content() }
-                    // Buttons
+                    // Keep the content collapsible when switching to input mode.
+                    Box(Modifier.weight(1f, fill = false)) {
+                        this@Column.content()
+                    }
+
                     Box(
-                        modifier = Modifier.padding(DialogButtonsPadding)
+                        modifier = Modifier
+                            .padding(DialogButtonsPadding)
                             .padding(top = 8.dp)
                     ) {
                         CompositionLocalProvider(
                             LocalContentColor provides colors.confirmButtonColor,
-                            LocalTextStyle provides MaterialTheme.typography.labelLarge,
+                            LocalTextStyle provides typography.button,
                             LocalLayoutDirection provides LayoutDirection.Rtl
                         ) {
                             Row(
-                                modifier = Modifier.fillMaxWidth().padding(horizontal = DialogButtonsCrossAxisSpacing),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = DialogButtonsCrossAxisSpacing),
                                 horizontalArrangement = Arrangement.End,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
@@ -85,9 +97,9 @@ fun PersianDatePickerDialog(
                             }
                         }
                     }
-
                 }
             }
+        }
     }
 }
 
